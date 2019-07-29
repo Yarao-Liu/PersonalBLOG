@@ -69,9 +69,6 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public List<Admin> getAdminByPage(Integer from, Integer to) {
 		List<Admin> admins=adminDao.getAdminByPage(from,to);
-		for (Admin admin : admins) {
-			System.out.println(admin.toString());
-		}
 		return admins;
 	}
 

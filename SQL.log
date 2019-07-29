@@ -1,0 +1,10 @@
+2019-07-29 17:29:27.992  INFO 13544 --- [main] com.mrliu.PersonalBlogApplicationTests   : Starting PersonalBlogApplicationTests on DESKTOP-P32GBTS with PID 13544 (started by Mr.Liu in E:\STS Projects\PersonalBLOG)
+2019-07-29 17:29:27.995  INFO 13544 --- [main] com.mrliu.PersonalBlogApplicationTests   : No active profile set, falling back to default profiles: default
+2019-07-29 17:29:31.605  INFO 13544 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-07-29 17:29:32.489  INFO 13544 --- [main] com.mrliu.PersonalBlogApplicationTests   : Started PersonalBlogApplicationTests in 5.15 seconds (JVM running for 6.93)
+2019-07-29 17:29:32.944  INFO 13544 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-07-29 17:30:24.132  INFO 2884 --- [main] com.mrliu.PersonalBlogApplicationTests   : Starting PersonalBlogApplicationTests on DESKTOP-P32GBTS with PID 2884 (started by Mr.Liu in E:\STS Projects\PersonalBLOG)
+2019-07-29 17:30:24.134  INFO 2884 --- [main] com.mrliu.PersonalBlogApplicationTests   : No active profile set, falling back to default profiles: default
+2019-07-29 17:30:27.426  INFO 2884 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-07-29 17:30:28.416  INFO 2884 --- [main] com.mrliu.PersonalBlogApplicationTests   : Started PersonalBlogApplicationTests in 4.829 seconds (JVM running for 6.004)
+2019-07-29 17:30:28.931  INFO 2884 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'

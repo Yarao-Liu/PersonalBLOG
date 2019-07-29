@@ -13,8 +13,16 @@ PersonalBLOG是一个自主开发的个人博客管理系统，是本人技术�
 后面持续更新.....
 
 
-
 SQL.sql 为数据库脚本文件
 PersonalBLOG.war是Maven打包项目，可以直接放到tomcat下运行。
 用户名：liuyarao
 密码：  liu134392
+
+2019/07/29 更新
+修复BUG：
+	查询结果角色一栏由数字改为角色名称（字符串）
+	admin的属性roleid也由Integer更改为String。
+完成模块：
+	admin和role表关联查询
+修复BUG：
+	用户角色修改时不能成功回显的问题

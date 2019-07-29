@@ -6,7 +6,7 @@ public class Admin {
 	private String password;
 	private String phone;
 	private String email;
-	private Integer roleid;
+	private String roleid;
 	private String createtime;
 	private String status;
 	
@@ -21,10 +21,10 @@ public class Admin {
 	}
 	
 	
-	public Integer getRoleid() {
+	public String getRoleid() {
 		return roleid;
 	}
-	public void setRoleid(Integer roleid) {
+	public void setRoleid(String roleid) {
 		this.roleid = roleid;
 	}
 	public Integer getId() {

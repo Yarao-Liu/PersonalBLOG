@@ -32,6 +32,6 @@ public interface AdminDao {
 	@Select("select count(*) from admin")
 	public Integer countAdmin();
 	//SELECT * FROM admin  LIMIT 0,10
-	@Select("select * from admin ORDER BY createtime DESC limit #{from},#{to}")
+//	@Select("select * from admin ORDER BY createtime DESC limit #{from},#{to}")
 	public List<Admin> getAdminByPage(Integer from, Integer to);
 }

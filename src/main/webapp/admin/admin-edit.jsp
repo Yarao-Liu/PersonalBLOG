@@ -161,11 +161,11 @@
 				data:{id:id},
 					success:function(admin){
 						//alert(msg);
+						console.log(admin.roleid);
 						$("#username").val(admin.username);
 						$("#phone").val(admin.phone);
 						$("#L_email").val(admin.email);
-						$("#radiogroup").val(admin.roleid);
-						$(":radio[name=roleid][value='+admin.roleid+']").attr("checked","true");
+						$(":radio[name=roleid][value='"+admin.roleid+"']").attr("checked","true");
 						$("#L_pass").val(admin.password);
 						$("#L_repass").val(admin.password);
 					}

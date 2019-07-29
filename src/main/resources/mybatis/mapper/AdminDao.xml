@@ -2,28 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mrliu.dao.AdminDao">
-<!-- 	<select id="getAdminByPage" resultMap="adminResultMap"> -->
-<!-- 		SELECT admin.id,username,PASSWORD,phone,email,role.roleName,createtime,STATUS -->
-<!-- 		FROM admin -->
-<!-- 		LEFT JOIN role -->
-<!-- 		ON admin.roleid=role.id -->
-<!-- 		ORDER BY createtime DESC -->
-<!-- 		limit #{from},#{to} -->
-<!-- 	</select> -->
-<!-- 	<resultMap id="adminResultMap" type="com.mrliu.po.Admin"> -->
-<!-- 		<id property="id" column="id"/> -->
-<!-- 		<result property="username" column="username"/>	 -->
-<!-- 		<result property="phone" column="phone"/>	 -->
-<!-- 		<result property="email" column="email"/>	 -->
-<!-- 		<result property="createtime" column="createtime"/>	 -->
-<!-- 		<result property="status" column="status"/>	 -->
-<!-- 	   assocication可以指定联合的JavaBean对象 -->
-<!--                property="role"指定关联查询的Role 类型的role 属性 -->
-<!--                javaType:指定这个role属性对象的类型 -->
-<!--             -->	 
-<!-- 	    <association property="role" javaType="role"> -->
-<!-- 	    	<id column="role_id" property="id"/> -->
-<!-- 	    	<result column="roleName" property="roleName"/> -->
-<!-- 	    </association> -->
-<!-- 	</resultMap> -->
+	<select id="getAdminByPage" resultType="admin">
+		SELECT 
+  			id,
+  			username,
+  			PASSWORD,
+  			phone,
+  			email,
+  			b.roleName roleid,
+  			createtime,
+  			STATUS 
+		FROM
+  			admin a
+		LEFT JOIN 
+			(SELECT	roleId,roleName FROM role) b 
+		ON a.roleid=b.roleId 
+		ORDER BY createtime DESC 
+		limit #{from},#{to}
+	</select>
 </mapper>
