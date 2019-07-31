@@ -26,3 +26,11 @@ PersonalBLOG.war是Maven打包项目，可以直接放到tomcat下运行。
 	admin和role表关联查询
 修复BUG：
 	用户角色修改时不能成功回显的问题
+
+2019/07/31 更新
+准备文章模块的编写：
+         新增class:Category、Article、ArticleDao、ArticleService、
+            ArticleServiceImpl、ArticleController等等
+         完成ajax异步查询选择的文章类别      
+         新增JSP页面:article-list.jsp、article-add.jsp、article-edit.jsp等等
+        

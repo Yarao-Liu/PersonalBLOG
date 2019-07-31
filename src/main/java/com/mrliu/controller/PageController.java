@@ -50,4 +50,20 @@ public class PageController {
 	{
 		return "admin/admin-info";
 	}
+	
+	@RequestMapping("/article-list")
+	public String article_list()
+	{
+		return "article/article-list";
+	}
+	@RequestMapping("/article-add")
+	public String article_add()
+	{
+		return "article/article-add";
+	}
+	@RequestMapping("/article-edit")
+	public String article_edit()
+	{
+		return "article/article-edit";
+	}
 }

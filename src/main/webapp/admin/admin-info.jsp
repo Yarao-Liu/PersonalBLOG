@@ -44,6 +44,10 @@
                             <td>用户角色</td>
                             <td>${admin.roleid}</td></tr>
                         <tr>
+                        <tr>
+                            <td>注册时间</td>
+                            <td>${admin.createtime}</td></tr>
+                        <tr>
                             <td>操作系统</td>
                             <td>${osinfo}</td></tr>
                         <tr>

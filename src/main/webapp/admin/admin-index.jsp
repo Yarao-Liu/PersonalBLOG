@@ -29,11 +29,10 @@
             <a href="javascript:;">${admin.username}</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
               <dd><a onclick="x_admin_show('个人信息','<%=PATH%>/admin-info')">个人信息</a></dd>
-              <dd><a onclick="x_admin_show('切换帐号','<%=PATH%>/admin-login')">切换帐号</a></dd>
-              <dd><a id="logoutBtn">退出</a></dd>
+              <dd><a class="logoutBtn">切换帐号</a></dd>
             </dl>
           </li>
-          <li class="layui-nav-item to-index"><a href="/">前台首页(待开发)</a></li>
+          <li class="layui-nav-item to-index"><a href="#">前台首页(待开发)</a></li>
         </ul>      
     </div>
     <!-- 顶部结束 -->
@@ -55,7 +54,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a _href="<%=PATH%>/admin/order-list">
+                        <a _href="<%=PATH%>/article-list">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>文章列表</cite>
                         </a>
@@ -143,7 +142,7 @@
     <!-- 底部结束 -->
     <script type="text/javascript">
 		$(function(){
-			$("#logoutBtn").click(function(){
+			$(".logoutBtn").click(function(){
 				layer.confirm('确定要退出登录吗?',function(index){
 		              //发异步移除session
 		              $(function(){

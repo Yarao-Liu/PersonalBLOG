@@ -6,7 +6,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>后台登录-个人博客</title>
-    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="<%=PATH%>/css/font.css">
