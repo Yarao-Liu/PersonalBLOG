@@ -61,31 +61,7 @@
             <th>文章操作</th>
             </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-            </td>
-            <td>1</td>
-            <td>20190729</td>
-            <td>java</td>
-            <td>mrliu</td>
-            <td><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            	重新注册自行车自行车在虚拟机看出你仔细看南昌之星南昌之星才能在心里才能
-            	坐下来辞职信理财中西里菜执行流程先兆流产仔细看了抽象类中从哪里下载看错了
-            	中选出你中西里菜那下载卵巢囊肿修理厂拿走了走流程走流程你在心里看出哪里仔
-            	细看农村可自行朝夕相处你这系列课程呢</p>
-            </td>
-            <td>2017-08-17 18:22</td>
-            <td class="td-manage">
-              <a title="编辑"  onclick="x_admin_show('文章编辑','<%=PATH%>/article-edit?id=1')" href="javascript:;">
-                <i class="layui-icon">&#xe642;</i>
-              </a>
-              <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                <i class="layui-icon">&#xe640;</i>
-              </a>
-            </td>
-          </tr>
+        <tbody id="articles">
         </tbody>
       </table>
       <div class="page">
@@ -98,58 +74,30 @@
           <a class="next" href="">&gt;&gt;</a>
         </div>
       </div>
-
-    </div>
-    <script>
-      layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#start' //指定元素
-        });
-
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#end' //指定元素
-        });
-      });
-
-       /*用户-停用*/
-      function member_stop(obj,id){
-          layer.confirm('确认要停用吗？',function(index){
-
-              if($(obj).attr('title')=='启用'){
-
-                //发异步把用户状态进行更改
-                $(obj).attr('title','停用')
-                $(obj).find('i').html('&#xe62f;');
-
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                layer.msg('已停用!',{icon: 5,time:1000});
-
-              }else{
-                $(obj).attr('title','启用')
-                $(obj).find('i').html('&#xe601;');
-
-                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                layer.msg('已启用!',{icon: 5,time:1000});
-              }
-              
-          });
-      }
-
+    </div> 
+  </body>
+   <script>
       /*用户-删除*/
-      function member_del(obj,id){
+      function article_del(obj,id){
           layer.confirm('确认要删除吗？',function(index){
-              //发异步删除数据
-              $(obj).parents("tr").remove();
-              layer.msg('已删除!',{icon:1,time:1000});
+              $(function(){
+					$.ajax({
+							type:'POST',
+							url:'<%=PATH%>/deleteArticleById',
+							data:{id:id},
+							success:function(result)
+							{
+								 if(result=true)
+								 {
+									 $(obj).parents("tr").remove();
+						             layer.msg('已删除!',{icon:1,time:1000});	
+								 }
+							}
+						})
+                  })
+             
           });
       }
-
-
-
       function delAll (argument) {
 
         var data = tableCheck.getData();
@@ -160,7 +108,39 @@
             $(".layui-form-checked").not('.header').parents('tr').remove();
         });
       }
-    </script>
-  </body>
+      $(function(){
+		$.ajax({
+			type:'POST',
+			url:'<%=PATH%>/getAllArticles',
+			success:function(articles)
+			{
+				var tableContent="";
+				$("#articles").html("");
+				$.each(articles,function(i,article){
+                    tableContent+='<tr>';
+                    tableContent+='<td>';
+                    tableContent+='<div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='+article.art_id+'><i class="layui-icon">&#xe605;</i></div>';
+                    tableContent+='</td>';
+                    tableContent+='<td>'+article.art_id+'</td>';
+                    tableContent+='<td>'+article.art_name+'</td>';
+                    tableContent+='<td>'+article.cate_id+'</td>';
+                    tableContent+='<td>'+article.author_id+'</td>';
+                    tableContent+='<td><p>'+article.art_body+'</p></td>';
+                    tableContent+='<td>'+article.updatetime+'</td>';
+                    tableContent+='<td class="td-manage">';
+                    tableContent+='<a title="编辑"  onclick="x_admin_show(&apos;文章编辑&apos;,&apos;<%=PATH%>/article-edit?id='+article.art_id+'&apos;)" href="javascript:;">';
+                    tableContent+='<i class="layui-icon">&#xe642;</i>';
+                    tableContent+='</a>';
+                    tableContent+='<a title="删除" onclick="article_del(this,&apos;'+article.art_id+'&apos;)" href="javascript:;">';
+                    tableContent+='<i class="layui-icon">&#xe640;</i>';
+                    tableContent+='</a>';
+                    tableContent+='</td>';
+                    tableContent+='</tr>';
+					$("#articles").html(tableContent);
+                  });
+			}
+		})
 
+          })
+    </script>
 </html>

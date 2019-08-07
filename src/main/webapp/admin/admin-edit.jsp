@@ -140,7 +140,6 @@
 					                  // 获得frame索引
 					                  var index = parent.layer.getFrameIndex(window.name);
 					                  //关闭当前frame
-					                  
 					                  parent.layer.close(index);    
 					              });
 							}else{layer.alert("提交失败", {icon: 2});}

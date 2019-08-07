@@ -33,4 +33,9 @@ PersonalBLOG.war是Maven打包项目，可以直接放到tomcat下运行。
             ArticleServiceImpl、ArticleController等等
          完成ajax异步查询选择的文章类别      
          新增JSP页面:article-list.jsp、article-add.jsp、article-edit.jsp等等
-        
+
+2019/08/07 更新
+完成大部分文章模块的编写：
+          重新编写了 Category和Article的相关接口和实现类
+          完成ajax异步请求&&表关联查询文章article实体&&展示查询结果。
+          完成ajax异步请求新增和根据id删除文章

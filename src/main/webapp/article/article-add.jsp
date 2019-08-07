@@ -24,6 +24,7 @@
     <body>
         <div class="x-body">
             <form class="layui-form layui-form-pane">
+            	<input id="author_id" value='${admin.id}'  type="hidden"/>
                 <div class="layui-form-item">
                     <label for="L_title" class="layui-form-label">
                        	 标题
@@ -35,10 +36,10 @@
                 </div>
                 <div class="layui-form-item layui-form-text">
                     <div class="layui-input-block">
-                        <textarea id="L_content" name="content" 
+                        <textarea id="L_art_body" name="art_body" 
                         placeholder="请输入内容" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
                     </div>
-                    <label for="L_content" class="layui-form-label" style="top: -2px;">
+                    <label for="L_art_body" class="layui-form-label" style="top: -2px;">
                       	  描述
                     </label>
                 </div>
@@ -67,7 +68,6 @@
 						type:"POST",
 						url:"<%=PATH%>/findCates",
 						success:function(results){
-							$("#cates").html("");
 							var tableContent="";
 							tableContent+="<option></option>";
 							$.each(results,function(i,result){
@@ -84,28 +84,46 @@
               var form = layui.form
               ,layer = layui.layer
               ,layedit = layui.layedit;
-
-
-                layedit.set({
-                  uploadImage: {
-                    url: "<%=PATH%>/json/upimg.json" //接口url
-                    ,type: 'post' //默认post
-                  }
-                })
   
             //创建一个编辑器
-            editIndex = layedit.build('L_content');
+            //创建一个编辑器
+            editIndex = layedit.build('L_art_body',
+                    {tool:
+                        ['left','center','right','|','strong',
+						 'italic','underline','del','|',
+						 'link','unlink','face']});
 
               //监听提交
               form.on('submit(add)', function(data){
-                console.log(data);
+                console.log(data.field);
+                var article=data.field;
+                var msg=layedit.getText(editIndex);
                 //发异步，把数据提交给后台
-                layer.alert("增加成功", {icon: 6},function () {
-                    // 获得frame索引
-                    var index = parent.layer.getFrameIndex(window.name);
-                    //关闭当前frame
-                    parent.layer.close(index);
-                });
+                $(function(){
+					$.ajax({
+						type:'POST',
+						url:'<%=PATH%>/addArticle',
+						data:{
+								art_name:article.title,
+								cate_id:article.cid,
+								author_id:$("#author_id").val(),
+								art_body:msg
+							},
+						success:function(result)
+						{
+							if(result==true)
+							{
+								 layer.alert("增加成功", {icon: 6},function () {
+					                    // 获得frame索引
+					                    var index = parent.layer.getFrameIndex(window.name);
+					                    //关闭当前frame
+					                    parent.layer.close(index);
+					             });
+							}
+						}
+					})	
+                })
+               
                 return false;
               });       
             });
