@@ -21,5 +21,9 @@ public interface ArticleDao {
 	@Insert("insert into article(art_name,art_body,cate_id,author_id,updatetime)"
 			+ "values(#{art_name},#{art_body},#{cate_id},#{author_id},#{updatetime})")
 	public boolean addArticle(Article article);
+	@Select("select count(*) from article")
+	public Integer countArticle();
+	
+	public List<Article> getArticleByPage(Integer from, Integer to);
 
 }

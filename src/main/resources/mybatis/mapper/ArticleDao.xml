@@ -20,4 +20,23 @@
 		ON a.author_id=c.id
 		ORDER BY updatetime DESC 
 	</select>
+	<select id="getArticleByPage" resultType="article">
+		SELECT 
+  			art_id,
+  			art_name,
+  			b.cateName cate_id,
+  			c.username author_id,
+  			art_body,
+  			updatetime
+		FROM
+  			article a
+		LEFT JOIN 
+			(SELECT	id,cateName FROM category) b 
+		ON a.cate_id=b.id
+		LEFT JOIN 
+			(SELECT	id,username FROM admin) c 
+		ON a.author_id=c.id
+		ORDER BY updatetime DESC  
+		limit #{from},#{to}
+	</select>
 </mapper>

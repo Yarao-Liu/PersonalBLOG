@@ -44,7 +44,7 @@
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
         <button class="layui-btn" onclick="x_admin_show('添加文章','<%=PATH%>/article-add')"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：88 条</span>
+        <span class="x-right" style="line-height:40px" id="sumArticle"><!--共有数据：88 条--></span>
       </xblock>
       <table class="layui-table">
         <thead>
@@ -61,19 +61,12 @@
             <th>文章操作</th>
             </tr>
         </thead>
+        <!-- 表格内容占位符 -->
         <tbody id="articles">
         </tbody>
       </table>
-      <div class="page">
-        <div>
-          <a class="prev" href="">&lt;&lt;</a>
-          <a class="num" href="">1</a>
-          <span class="current">2</span>
-          <a class="num" href="">3</a>
-          <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
-        </div>
-      </div>
+      <!-- 分页标签占位符 -->
+      <div class="page" id="pages"></div>
     </div> 
   </body>
    <script>
@@ -94,53 +87,81 @@
 								 }
 							}
 						})
-                  })
-             
+                  })  
           });
       }
       function delAll (argument) {
-
         var data = tableCheck.getData();
-  
         layer.confirm('确认要删除吗？'+data,function(index){
             //捉到所有被选中的，发异步进行删除
-            layer.msg('删除成功', {icon: 1});
-            $(".layui-form-checked").not('.header').parents('tr').remove();
+            $(function(){
+				$.ajax({
+						type:'POST',
+						url:'<%=PATH%>/deleteAllArticles',
+						data:{list:data.toString()},
+						success:function(result){
+							console.log(result);
+							if(result==true)
+							{
+								layer.msg('删除成功', {icon: 1});
+						        $(".layui-form-checked").not('.header').parents('tr').remove();
+							}
+						}
+					})
+                })
         });
       }
-      $(function(){
-		$.ajax({
-			type:'POST',
-			url:'<%=PATH%>/getAllArticles',
-			success:function(articles)
-			{
-				var tableContent="";
-				$("#articles").html("");
-				$.each(articles,function(i,article){
-                    tableContent+='<tr>';
-                    tableContent+='<td>';
-                    tableContent+='<div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='+article.art_id+'><i class="layui-icon">&#xe605;</i></div>';
-                    tableContent+='</td>';
-                    tableContent+='<td>'+article.art_id+'</td>';
-                    tableContent+='<td>'+article.art_name+'</td>';
-                    tableContent+='<td>'+article.cate_id+'</td>';
-                    tableContent+='<td>'+article.author_id+'</td>';
-                    tableContent+='<td><p>'+article.art_body+'</p></td>';
-                    tableContent+='<td>'+article.updatetime+'</td>';
-                    tableContent+='<td class="td-manage">';
-                    tableContent+='<a title="编辑"  onclick="x_admin_show(&apos;文章编辑&apos;,&apos;<%=PATH%>/article-edit?id='+article.art_id+'&apos;)" href="javascript:;">';
-                    tableContent+='<i class="layui-icon">&#xe642;</i>';
-                    tableContent+='</a>';
-                    tableContent+='<a title="删除" onclick="article_del(this,&apos;'+article.art_id+'&apos;)" href="javascript:;">';
-                    tableContent+='<i class="layui-icon">&#xe640;</i>';
-                    tableContent+='</a>';
-                    tableContent+='</td>';
-                    tableContent+='</tr>';
-					$("#articles").html(tableContent);
-                  });
-			}
-		})
-
-          })
+	$(function(){
+    	  $.ajax({
+				type:"POST",
+				url:"<%=PATH %>/countArticle",
+				success:function(count){
+					$("#sumArticle").html("共有数据:"+count+"条");
+					layui.use('laypage',function(){
+						var laypage=layui.laypage;		
+						laypage.render({
+						    elem: 'pages'
+						    ,count: count
+						    ,layout: ['count', 'prev', 'page', 'next','refresh', 'skip']
+						    ,jump: function(obj){
+						      console.log(obj.curr);
+						      console.log(obj.limit);
+						      $.ajax({
+								type:"POST",
+								url:"<%=PATH%>/getArticleByPage",
+								data:{from:obj.curr,to:obj.limit},
+								success:function(articles){
+									var tableContent="";
+									$("#articles").html("");
+									$.each(articles,function(i,article){
+					                     tableContent+='<tr>';
+					                     tableContent+='<td>';
+					                     tableContent+='<div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='+article.art_id+'><i class="layui-icon">&#xe605;</i></div>';
+					                     tableContent+='</td>';
+					                     tableContent+='<td>'+article.art_id+'</td>';
+					                     tableContent+='<td>'+article.art_name+'</td>';
+					                     tableContent+='<td>'+article.cate_id+'</td>';
+					                     tableContent+='<td>'+article.author_id+'</td>';
+					                     tableContent+='<td><p>'+article.art_body+'</p></td>';
+					                     tableContent+='<td>'+article.updatetime+'</td>';
+					                     tableContent+='<td class="td-manage">';
+					                     tableContent+='<a title="编辑"  onclick="x_admin_show(&apos;文章编辑&apos;,&apos;<%=PATH%>/article-edit?id='+article.art_id+'&apos;)" href="javascript:;">';
+					                     tableContent+='<i class="layui-icon">&#xe642;</i>';
+					                     tableContent+='</a>';
+					                     tableContent+='<a title="删除" onclick="article_del(this,&apos;'+article.art_id+'&apos;)" href="javascript:;">';
+					                     tableContent+='<i class="layui-icon">&#xe640;</i>';
+					                     tableContent+='</a>';
+					                     tableContent+='</td>';
+					                     tableContent+='</tr>';
+					 					$("#articles").html(tableContent);
+					                   });
+									}
+							      });
+						    	}
+						  });
+			       	 }); 
+					}
+				});
+          });
     </script>
 </html>

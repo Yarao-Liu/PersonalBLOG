@@ -48,11 +48,11 @@ CREATE TABLE `article` (
   `art_body` varchar(8000) DEFAULT NULL,
   `updatetime` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`art_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 /*Data for the table `article` */
 
-insert  into `article`(`art_id`,`art_name`,`cate_id`,`author_id`,`art_body`,`updatetime`) values (1,'demo','1','1','xcxcxcxcxcxczxcxzcxzcxzcxzcsdsdsdsdsdsdsdsdsdscscsczcszczc','2019-07-27'),(2,'asd','2','1','asdasdasdasdsafasdasdasdsdadsa','2019-08-07');
+insert  into `article`(`art_id`,`art_name`,`cate_id`,`author_id`,`art_body`,`updatetime`) values (3,'qwe','1','1','qwqeqweqweqweqwewqeqweqweqwewqewqewqeqweqweqweqweqweqweqweqweq','2019-08-08'),(4,'zxc','3','1','zxczxczxczxczxczxczczxczxczxczxcxzcxzcxzczxczxczxczxczxczxczxczx','2019-08-08');
 
 /*Table structure for table `category` */
 

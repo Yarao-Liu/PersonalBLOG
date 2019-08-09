@@ -72,20 +72,21 @@
 				var tableContent="";
 				tableContent+="<option></option>";
 				$.each(results,function(i,result){
+					console.log(result.id);
 					tableContent+="<option value='"+result.id+"'>"+result.cateName+"</option>";
 					$("#cates").html(tableContent);	
 				});
-			}
-		})
-		$.ajax({
-			type:"POST",
-			url:"<%=PATH%>/findArticleById",
-			data:{id:$("#id").val()},
-			success:function(article){
-// 				console.log(article);
-				$("#L_art_name").val(article.art_name);
-				$("#L_art_body").val(article.art_body);
-				$("#cates").val(article.cate_id);
+				$.ajax({
+					type:"POST",
+					url:"<%=PATH%>/findArticleById",
+					data:{id:$("#id").val()},
+					success:function(article){
+						$("#L_art_name").val(article.art_name);
+						$("#L_art_body").val(article.art_body);
+						$("#cates").val(article.cate_id);
+						console.log(article.cate_id);
+					}
+				})
 			}
 		})
 	})
@@ -102,7 +103,6 @@
                         ['left','center','right','|','strong',
 						 'italic','underline','del','|',
 						 'link','unlink','face']});
-
               //监听提交
               form.on('submit(update)', function(data){
 				  var msg=layedit.getText(editIndex);

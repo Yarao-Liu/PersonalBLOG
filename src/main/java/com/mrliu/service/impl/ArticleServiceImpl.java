@@ -48,5 +48,15 @@ public class ArticleServiceImpl implements ArticleService{
 		article.setUpdatetime(createtime);
 		return articleDao.addArticle(article);
 	}
+	@Override
+	public Integer countArticle() {
+		// TODO Auto-generated method stub
+		return articleDao.countArticle();
+	}
+	@Override
+	public List<Article> getArticleByPage(Integer from, Integer to) {
+		// TODO Auto-generated method stub
+		return articleDao.getArticleByPage(from,to);
+	}
 
 }

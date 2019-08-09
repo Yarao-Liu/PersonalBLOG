@@ -16,4 +16,8 @@ public interface ArticleService {
 
 	public boolean addArticle(Article article);
 
+	public Integer countArticle();
+
+	public List<Article> getArticleByPage(Integer from, Integer to);
+
 }
