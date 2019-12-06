@@ -22,7 +22,7 @@ PersonalBLOG.war是Maven打包项目，可以直接放到tomcat下运行。
 
 2019/07/29 更新
 修复BUG：
-	查询结果角色一栏由数字改为角色名称（字符串）
+	 查询结果角色一栏由数字改为角色名称（字符串）
 	admin的属性roleid也由Integer更改为String。
 完成模块：
 	admin和role表关联查询
@@ -49,4 +49,8 @@ PersonalBLOG.war是Maven打包项目，可以直接放到tomcat下运行。
 慢，有的查询结果还没来得及返回，有的就将页面渲染完成了。
 优化Article的展示：
         使用ajax重写了列表信息的请求&&分页查询,使展示页面更加简洁。
- 
+2019/12/06 更新
+新增 组合查询：
+	用户可以根据用户名、邮箱以及手机号进行组合查询过滤信息。
+修复 BUG：
+	将返回值部分修改为SimpleResponse，方便返回data和status.
