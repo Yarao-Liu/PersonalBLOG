@@ -1,11 +1,14 @@
 package com.mrliu.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +16,50 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mrliu.po.Admin;
+import com.mrliu.response.SimpleResponse;
 import com.mrliu.service.AdminService;
 
 @Controller
 public class AdminController {
 	@Autowired
 	private AdminService adminService;
+	@ResponseBody
+	@RequestMapping("/countfuzzy")
+	public Integer  Countfuzzy(Admin admin)
+	{
+		
+		admin.setUsername(StringUtils.trimToNull(admin.getUsername()));
+		//目前只用到这三个属性
+		admin.setEmail(StringUtils.trimToNull(admin.getEmail()));
+		admin.setPhone(StringUtils.trimToNull(admin.getPhone()));
+		Integer count=adminService.Countfuzzy(admin);
+		System.out.println("-->"+admin);
+		System.out.println("-->"+count);
+		return count;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/fuzzySearch")
+	public SimpleResponse fuzzySearch(@RequestParam("username")String username,
+			@RequestParam("phone")String phone,@RequestParam("email")String email,
+			@RequestParam("from")Integer from,@RequestParam("to")Integer to)
+	{
+		SimpleResponse simpleResponse = new SimpleResponse();
+		//目前只用到这三个属性
+		username = StringUtils.trimToNull(username);
+		phone = StringUtils.trimToNull(phone);
+		email= StringUtils.trimToNull(email);
+		Map<String, Object>conditonMap=new HashMap<String, Object>();
+		conditonMap.put("username", username);
+		conditonMap.put("phone",phone);
+		conditonMap.put("email",email);
+		conditonMap.put("from",(from-1)*to);
+		conditonMap.put("to",to);
+		List<Admin>admins=adminService.fuzzySearch(conditonMap);
+		System.out.println(admins);
+		simpleResponse.setResult(admins);
+		return simpleResponse;
+	}
 	@RequestMapping("/login")
 	public String login(HttpServletRequest request,@RequestParam("username")String username,
 						@RequestParam("password")String password)
@@ -31,7 +72,8 @@ public class AdminController {
 		request.getSession().setAttribute("javaVersion",javaVersion);
 		request.getSession().setAttribute("runtime",runtime);
 		try {
-			Thread.currentThread().sleep(500);
+			Thread.currentThread();
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

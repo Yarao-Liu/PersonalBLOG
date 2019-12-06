@@ -9,9 +9,8 @@ spring:
   datasource:
     username: root
     password: 109221
-    url: jdbc:mysql://localhost:3306/jdbc
+    url: jdbc:mysql://localhost:3306/jdbc?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-logging:
-  file: SQL.log  level:    com.mrliu.dao: DEBUG
+logging:  level:    com.mrliu.dao: DEBUG
   

@@ -3,6 +3,7 @@ package com.mrliu.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,18 @@ public class AdminServiceImpl implements AdminService{
 	public List<Admin> getAdminByPage(Integer from, Integer to) {
 		List<Admin> admins=adminDao.getAdminByPage(from,to);
 		return admins;
+	}
+	@Override
+	public List<Admin> fuzzySearch(Map<String, Object>conditonMap) {
+		// TODO Auto-generated method stub
+		return adminDao.fuzzySelect(conditonMap);
+	}
+	@Override
+	public Integer Countfuzzy(Admin admin) {
+		// TODO Auto-generated method stub
+		Integer count = adminDao.CountfuzzySelect(admin);
+		//System.out.println("Countfuzzy"+count);
+		return count;
 	}
 
 }

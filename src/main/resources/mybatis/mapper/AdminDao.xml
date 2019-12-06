@@ -2,6 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mrliu.dao.AdminDao">
+	<sql id="conditionsql">
+		<where>
+			<if test="username!=null">
+			and username=#{username}
+		</if>
+		<if test="phone!=null">
+			and phone=#{phone}
+		</if>
+		<if test="email!=null">
+			and email=#{email}
+		</if>
+		</where>
+	</sql>
 	<select id="getAdminByPage" resultType="admin">
 		SELECT 
   			id,
@@ -19,5 +32,30 @@
 		ON a.roleid=b.roleId 
 		ORDER BY createtime DESC 
 		limit #{from},#{to}
+	</select>
+	<select id="fuzzySelect" resultType="admin" parameterType="Map">
+		SELECT 
+  			id,
+  			username,
+  			PASSWORD,
+  			phone,
+  			email,
+  			b.roleName roleid,
+  			createtime,
+  			STATUS 
+		FROM
+  			admin a
+		LEFT JOIN 
+			(SELECT	roleId,roleName FROM role) b 
+		ON a.roleid=b.roleId 
+		<include refid="conditionsql"></include>
+		ORDER BY createtime DESC 
+		limit #{from},#{to}
+	</select>
+	<select id="CountfuzzySelect" resultType="Integer">
+		select count(*)
+		from admin
+		<include refid="conditionsql"></include>
+		
 	</select>
 </mapper>

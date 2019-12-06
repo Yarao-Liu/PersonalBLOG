@@ -34,10 +34,10 @@
     <div class="x-body">
       <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so">
-          <input class="layui-input" placeholder="开始日" name="start" id="start">
-          <input class="layui-input" placeholder="截止日" name="end" id="end">
           <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
-          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+          <input type="text" name="phone"   placeholder="请输入联系电话" autocomplete="off" class="layui-input">
+          <input type="text" name="email"   placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+          <button class="layui-btn"  lay-submit="search" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
@@ -60,25 +60,102 @@
             <th>状态</th>
             <th>操作</th>
         </thead>
-        <tbody id="admins">
-        </tbody>
+        <tbody id="admins"></tbody>
       </table>
-      <div class="page" id="page">
-      </div>
+      <div class="page" id="page"></div>
     </div>
     <script>
-      layui.use('laydate', function(){
-        var laydate = layui.laydate; 
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#start' //指定元素
-        });
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#end' //指定元素
-        });
-      });
-      
+    layui.use('form', function(){
+    	  var form = layui.form;
+    	  //各种基于事件的操作，下面会有进一步介绍
+    	  form.on('submit(search)', function(data){
+        	  //console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
+        	  //console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
+        	  console.log(data.field); //当前容器的全部表单字段，名值对形式：{name: value}
+        	  var args=data.field;
+        	  var params={
+					username:args.username.trim(),
+					phone:args.phone.trim(),
+					email:args.email.trim(),
+					//roleid:args.roleid,
+					//status:args.status
+          		}
+        	  $(function(){
+            	  $.ajax({
+        				type:"POST",
+        				data:params,
+        				url:"<%=PATH %>/countfuzzy",
+        				success:function(count){
+        					$("#sumAdmin").html("共有数据:"+count+"条");
+        					$("#admins").html("");
+        					layui.use('laypage',function(){
+        						var laypage=layui.laypage;		
+        						laypage.render({
+        						    elem: 'page'
+        						    ,count: count
+        						    ,layout: ['count', 'prev', 'page', 'next','refresh', 'skip']
+        						    ,jump: function(obj){
+            						    params.from=obj.curr;
+            						    params.to=obj.limit;
+        						      $.ajax({
+        								type:"POST",
+        								url:"<%=PATH%>/fuzzySearch",
+        								data:params,
+        								success:function(result){
+            								console.log(result);
+            								var admins=result.result;
+        									var tableContent="";
+        									
+        									$.each(admins,function(i,admin){
+        					                    tableContent+='<tr>';
+        					                    tableContent+='<td>';
+        					                    tableContent+='<div type="checkbox" class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id="'+admin.id+'"><i class="layui-icon">&#xe605;</i></div>';
+        					                    tableContent+='</td>';
+        					                 	tableContent+='<td>'+admin.id+'</td>';
+        					                    tableContent+='<td>'+admin.username+'</td>';
+        					                    tableContent+='<td>'+admin.phone+'</td>';
+        					                    tableContent+='<td>'+admin.email+'</td>';
+        					                    tableContent+='<td>'+admin.roleid+'</td>';
+        					                    tableContent+='<td>'+admin.createtime+'</td>';
+        					                    if(admin.status=='1')
+        					                    {
+        					                    	tableContent+='<td class="td-status">';
+        					                        tableContent+='<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>';
+        					                        tableContent+='<td class="td-manage">';
+        					                        tableContent+='<a onclick="member_stop(this,'+admin.id+')" href="javascript:;"  title="停用">';
+        					                        tableContent+='<i class="layui-icon">&#xe601;</i></a>';
+        					                    }else if(admin.status=='0'){
+        					                    	tableContent+='<td class="td-status">';
+        					                        tableContent+='<span class="layui-btn layui-btn-normal layui-btn-disabled layui-btn-mini">已停用</span></td>';
+        					                        tableContent+='<td class="td-manage">';
+        					                        tableContent+='<a onclick="member_stop(this,'+admin.id+')" href="javascript:;"  title="启用">';
+        					                        tableContent+='<i class="layui-icon">&#xe62f;</i></a>';
+        										}
+        					                    tableContent+='<a title="编辑"  onclick="x_admin_show(&apos;编辑&apos;,&apos;<%=PATH%>/admin-edit?id='+admin.id+'&apos;)">';
+        					                    tableContent+='<i class="layui-icon">&#xe642;</i></a>';
+        					                    tableContent+='<a title="删除" onclick="member_del(this,&apos;'+admin.id+'&apos;)" href="javascript:;">';
+        					                    tableContent+='<i class="layui-icon">&#xe640;</i></a>';
+        					                    tableContent+='</td>';
+        					                    tableContent+='</tr> ';
+        										$("#admins").html(tableContent);
+        					                  }); 
+        									}
+        							      });
+        						    	}
+        						  });
+        			       	 }); 
+        					}
+        				});
+                  });
+        	  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        	});
+    	});
+	window.onload=function(){
+    	//alert('所有资源加载完毕！');
+    	selectAll();
+    	}
+
+    
        /*用户-停用*/
       function member_stop(obj,id){
           layer.confirm('确认要更改状态吗？',function(index){
@@ -157,69 +234,70 @@
                 })
         });
       }
-      $(function(){
-    	  $.ajax({
-				type:"POST",
-				url:"<%=PATH %>/countAdmin",
-				success:function(count){
-					$("#sumAdmin").html("共有数据:"+count+"条");
-					layui.use('laypage',function(){
-						var laypage=layui.laypage;		
-						laypage.render({
-						    elem: 'page'
-						    ,count: count
-						    ,layout: ['count', 'prev', 'page', 'next','refresh', 'skip']
-						    ,jump: function(obj){
-						      console.log(obj.curr);
-						      console.log(obj.limit);
-						      $.ajax({
-								type:"POST",
-								url:"<%=PATH%>/getAdminByPage",
-								data:{from:obj.curr,to:obj.limit},
-								success:function(admins){
-									var tableContent="";
-									$("#admins").html("");
-									$.each(admins,function(i,admin){
-					                    tableContent+='<tr>';
-					                    tableContent+='<td>';
-					                    tableContent+='<div type="checkbox" class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id="'+admin.id+'"><i class="layui-icon">&#xe605;</i></div>';
-					                    tableContent+='</td>';
-					                 	tableContent+='<td>'+admin.id+'</td>';
-					                    tableContent+='<td>'+admin.username+'</td>';
-					                    tableContent+='<td>'+admin.phone+'</td>';
-					                    tableContent+='<td>'+admin.email+'</td>';
-					                    tableContent+='<td>'+admin.roleid+'</td>';
-					                    tableContent+='<td>'+admin.createtime+'</td>';
-					                    if(admin.status=='1')
-					                    {
-					                    	tableContent+='<td class="td-status">';
-					                        tableContent+='<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>';
-					                        tableContent+='<td class="td-manage">';
-					                        tableContent+='<a onclick="member_stop(this,'+admin.id+')" href="javascript:;"  title="停用">';
-					                        tableContent+='<i class="layui-icon">&#xe601;</i></a>';
-					                    }else if(admin.status=='0'){
-					                    	tableContent+='<td class="td-status">';
-					                        tableContent+='<span class="layui-btn layui-btn-normal layui-btn-disabled layui-btn-mini">已停用</span></td>';
-					                        tableContent+='<td class="td-manage">';
-					                        tableContent+='<a onclick="member_stop(this,'+admin.id+')" href="javascript:;"  title="启用">';
-					                        tableContent+='<i class="layui-icon">&#xe62f;</i></a>';
-										}
-					                    tableContent+='<a title="编辑"  onclick="x_admin_show(&apos;编辑&apos;,&apos;<%=PATH%>/admin-edit?id='+admin.id+'&apos;)">';
-					                    tableContent+='<i class="layui-icon">&#xe642;</i></a>';
-					                    tableContent+='<a title="删除" onclick="member_del(this,&apos;'+admin.id+'&apos;)" href="javascript:;">';
-					                    tableContent+='<i class="layui-icon">&#xe640;</i></a>';
-					                    tableContent+='</td>';
-					                    tableContent+='</tr> ';
-										$("#admins").html(tableContent);
-					                  }); 
-									}
-							      });
-						    	}
-						  });
-			       	 }); 
-					}
-				});
-          });
+      function selectAll()
+      {
+    	  $(function(){
+        	  $.ajax({
+    				type:"POST",
+    				url:"<%=PATH %>/countAdmin",
+    				success:function(count){
+    					$("#sumAdmin").html("共有数据:"+count+"条");
+    					layui.use('laypage',function(){
+    						var laypage=layui.laypage;		
+    						laypage.render({
+    						    elem: 'page'
+    						    ,count: count
+    						    ,layout: ['count', 'prev', 'page', 'next','refresh', 'skip']
+    						    ,jump: function(obj){
+    						      $.ajax({
+    								type:"POST",
+    								url:"<%=PATH%>/getAdminByPage",
+    								data:{from:obj.curr,to:obj.limit},
+    								success:function(admins){
+    									var tableContent="";
+    									$("#admins").html("");
+    									$.each(admins,function(i,admin){
+    					                    tableContent+='<tr>';
+    					                    tableContent+='<td>';
+    					                    tableContent+='<div type="checkbox" class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id="'+admin.id+'"><i class="layui-icon">&#xe605;</i></div>';
+    					                    tableContent+='</td>';
+    					                 	tableContent+='<td>'+admin.id+'</td>';
+    					                    tableContent+='<td>'+admin.username+'</td>';
+    					                    tableContent+='<td>'+admin.phone+'</td>';
+    					                    tableContent+='<td>'+admin.email+'</td>';
+    					                    tableContent+='<td>'+admin.roleid+'</td>';
+    					                    tableContent+='<td>'+admin.createtime+'</td>';
+    					                    if(admin.status=='1')
+    					                    {
+    					                    	tableContent+='<td class="td-status">';
+    					                        tableContent+='<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>';
+    					                        tableContent+='<td class="td-manage">';
+    					                        tableContent+='<a onclick="member_stop(this,'+admin.id+')" href="javascript:;"  title="停用">';
+    					                        tableContent+='<i class="layui-icon">&#xe601;</i></a>';
+    					                    }else if(admin.status=='0'){
+    					                    	tableContent+='<td class="td-status">';
+    					                        tableContent+='<span class="layui-btn layui-btn-normal layui-btn-disabled layui-btn-mini">已停用</span></td>';
+    					                        tableContent+='<td class="td-manage">';
+    					                        tableContent+='<a onclick="member_stop(this,'+admin.id+')" href="javascript:;"  title="启用">';
+    					                        tableContent+='<i class="layui-icon">&#xe62f;</i></a>';
+    										}
+    					                    tableContent+='<a title="编辑"  onclick="x_admin_show(&apos;编辑&apos;,&apos;<%=PATH%>/admin-edit?id='+admin.id+'&apos;)">';
+    					                    tableContent+='<i class="layui-icon">&#xe642;</i></a>';
+    					                    tableContent+='<a title="删除" onclick="member_del(this,&apos;'+admin.id+'&apos;)" href="javascript:;">';
+    					                    tableContent+='<i class="layui-icon">&#xe640;</i></a>';
+    					                    tableContent+='</td>';
+    					                    tableContent+='</tr> ';
+    										$("#admins").html(tableContent);
+    					                  }); 
+    									}
+    							      });
+    						    	}
+    						  });
+    			       	 }); 
+    					}
+    				});
+              });
+          }
     </script>
   </body>
 </html>

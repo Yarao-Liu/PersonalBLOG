@@ -1,6 +1,7 @@
 package com.mrliu.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mrliu.po.Admin;
 
@@ -25,4 +26,8 @@ public interface AdminService {
 	public Integer countAdmin();
 
 	public List<Admin> getAdminByPage(Integer from, Integer to);
+
+	public List<Admin> fuzzySearch(Map<String, Object>conditonMap);
+
+	public Integer Countfuzzy(Admin admin);
 }

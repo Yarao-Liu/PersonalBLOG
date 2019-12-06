@@ -1,6 +1,7 @@
 package com.mrliu.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -34,4 +35,8 @@ public interface AdminDao {
 	//SELECT * FROM admin  LIMIT 0,10
 //	@Select("select * from admin ORDER BY createtime DESC limit #{from},#{to}")
 	public List<Admin> getAdminByPage(Integer from, Integer to);
+	
+	public List<Admin> fuzzySelect(Map<String, Object>conditonMap);
+	
+	public Integer CountfuzzySelect(Admin admin);
 }
