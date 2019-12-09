@@ -1,5 +1,0 @@
-2019-08-09 08:08:40.179  INFO 11552 --- [main] com.mrliu.PersonalBlogApplicationTests   : Starting PersonalBlogApplicationTests on DESKTOP-P32GBTS with PID 11552 (started by Mr.Liu in E:\STS Projects\PersonalBLOG)
-2019-08-09 08:08:40.184  INFO 11552 --- [main] com.mrliu.PersonalBlogApplicationTests   : No active profile set, falling back to default profiles: default
-2019-08-09 08:08:43.208  INFO 11552 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2019-08-09 08:08:43.738  INFO 11552 --- [main] com.mrliu.PersonalBlogApplicationTests   : Started PersonalBlogApplicationTests in 4.056 seconds (JVM running for 5.133)
-2019-08-09 08:08:44.104  INFO 11552 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
