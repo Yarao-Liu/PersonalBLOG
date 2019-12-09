@@ -62,23 +62,34 @@
             </form>
         </div>
     </body>
-    <script type="text/javascript">  
-	$(function(){
-		$.ajax({
-			type:"POST",
-			url:"<%=PATH%>/findCates",
-			success:function(results){
-				$("#cates").html("");
-				var tableContent="";
-				tableContent+="<option></option>";
-				$.each(results,function(i,result){
-					console.log(result.id);
-					tableContent+="<option value='"+result.id+"'>"+result.cateName+"</option>";
-					$("#cates").html(tableContent);	
-				});
+    <script type="text/javascript"> 
+    $(function($) {
+    	loadcates();
+        }); 
+    loadcates();
+	function loadcates(){
+		$(function(){
+			$.ajax({
+				type:"POST",
+				url:"<%=PATH%>/findCates?time=new Date().getTime()",
+				success:function(results){
+					$("#cates").html("");
+					var tableContent="";
+					tableContent+="<option></option>";
+					$.each(results,function(i,result){
+						console.log(result.id);
+						console.log(result.cateName);
+						tableContent+="<option value='"+result.id+"'>"+result.cateName+"</option>";
+						$("#cates").html(tableContent);	
+						getContent();
+					});
+					
+				}
+			})
+			function getContent(){
 				$.ajax({
 					type:"POST",
-					url:"<%=PATH%>/findArticleById",
+					url:"<%=PATH%>/findArticleById?time=new Date().getTime()",
 					data:{id:$("#id").val()},
 					success:function(article){
 						$("#L_art_name").val(article.art_name);
@@ -86,10 +97,11 @@
 						$("#cates").val(article.cate_id);
 						console.log(article.cate_id);
 					}
-				})
+			});
 			}
+			
 		})
-	})
+	}
 </script>
  <script>
      layui.use(['form','layer','layedit'], function(){

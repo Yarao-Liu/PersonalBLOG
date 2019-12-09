@@ -37,6 +37,9 @@
           <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
           <input type="text" name="phone"   placeholder="请输入联系电话" autocomplete="off" class="layui-input">
           <input type="text" name="email"   placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+           <div class="layui-input-inline">
+                <select data-placeholder="请选择人员级别" name="roleid" id="roles"></select>
+           </div>
           <button class="layui-btn"  lay-submit="search" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
@@ -64,7 +67,9 @@
       </table>
       <div class="page" id="page"></div>
     </div>
-    <script>
+    
+  </body>
+  <script>
     layui.use('form', function(){
     	  var form = layui.form;
     	  //各种基于事件的操作，下面会有进一步介绍
@@ -77,6 +82,7 @@
 					username:args.username.trim(),
 					phone:args.phone.trim(),
 					email:args.email.trim(),
+					roleid:args.roleid.trim()
 					//roleid:args.roleid,
 					//status:args.status
           		}
@@ -105,7 +111,11 @@
             								console.log(result);
             								var admins=result.result;
         									var tableContent="";
-        									
+        									var count=result.count;
+        									if(count==0)
+            									{
+        										layer.msg('未找到满足该条件的数据哦！',{icon:1,time:1000});
+            									}
         									$.each(admins,function(i,admin){
         					                    tableContent+='<tr>';
         					                    tableContent+='<td>';
@@ -150,11 +160,38 @@
         	  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         	});
     	});
-	window.onload=function(){
+    $(function($) {
+    	  // 你可以在这里继续使用$作为别名...
     	//alert('所有资源加载完毕！');
     	selectAll();
-    	}
+    	showRank();
+    	});
+		showRank();
+	  function showRank()
+	  {
+			$(function(){
+				$.ajax({
+					type:"GET",
+					url: "<%=PATH %>/findRanks?time=new Date().getTime()",
+					success:function(data){
+						//console.log(data);
+						var results=data.result;
+						console.log(results);
+						$("#roles").html("");
+						var tableContent="";
+						tableContent+="<option value=''>请选择人员级别</option>";
+						$.each(results,function(i,result){
+							console.log(result.roleId);
+							console.log(result.roleName);
+							//tableContent+="<option value='"+result.id+"'>"+result.cateName+"</option>";
+							tableContent+="<option value='"+result.roleId+"'>"+result.roleName+"</option>";
+							$("#roles").html(tableContent);	
+						});
+						}
+					})
 
+				})
+	  }
     
        /*用户-停用*/
       function member_stop(obj,id){
@@ -299,5 +336,4 @@
               });
           }
     </script>
-  </body>
 </html>

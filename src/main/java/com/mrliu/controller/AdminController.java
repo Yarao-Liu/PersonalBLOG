@@ -11,25 +11,30 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mrliu.po.Admin;
+import com.mrliu.po.Role;
 import com.mrliu.response.SimpleResponse;
 import com.mrliu.service.AdminService;
+import com.mrliu.service.RoleService;
 
 @Controller
 public class AdminController {
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private RoleService roleService;
 	@ResponseBody
 	@RequestMapping("/countfuzzy")
 	public Integer  Countfuzzy(Admin admin)
 	{
-		
-		admin.setUsername(StringUtils.trimToNull(admin.getUsername()));
 		//目前只用到这三个属性
+		admin.setUsername(StringUtils.trimToNull(admin.getUsername()));
+		admin.setRoleid(StringUtils.trimToNull(admin.getRoleid()));
 		admin.setEmail(StringUtils.trimToNull(admin.getEmail()));
 		admin.setPhone(StringUtils.trimToNull(admin.getPhone()));
 		Integer count=adminService.Countfuzzy(admin);
@@ -42,24 +47,40 @@ public class AdminController {
 	@RequestMapping("/fuzzySearch")
 	public SimpleResponse fuzzySearch(@RequestParam("username")String username,
 			@RequestParam("phone")String phone,@RequestParam("email")String email,
+			@RequestParam("roleid")String roleid,
 			@RequestParam("from")Integer from,@RequestParam("to")Integer to)
 	{
 		SimpleResponse simpleResponse = new SimpleResponse();
-		//目前只用到这三个属性
+		//目前只用到这四个属性
 		username = StringUtils.trimToNull(username);
 		phone = StringUtils.trimToNull(phone);
 		email= StringUtils.trimToNull(email);
+		roleid=StringUtils.trimToNull(roleid);
 		Map<String, Object>conditonMap=new HashMap<String, Object>();
 		conditonMap.put("username", username);
 		conditonMap.put("phone",phone);
 		conditonMap.put("email",email);
+		conditonMap.put("roleid",roleid);
 		conditonMap.put("from",(from-1)*to);
 		conditonMap.put("to",to);
 		List<Admin>admins=adminService.fuzzySearch(conditonMap);
 		System.out.println(admins);
 		simpleResponse.setResult(admins);
+		simpleResponse.setCount(admins.size());
 		return simpleResponse;
 	}
+	@ResponseBody
+	@GetMapping("/findRanks")
+	public SimpleResponse findRanks()
+	{
+		SimpleResponse response=new SimpleResponse();
+		List<Role> selectRoles = roleService.selectRoles();
+		response.setResult(selectRoles);
+		System.out.println(selectRoles);
+		response.setCount(selectRoles.size());
+		return response;
+	}
+	
 	@RequestMapping("/login")
 	public String login(HttpServletRequest request,@RequestParam("username")String username,
 						@RequestParam("password")String password)
